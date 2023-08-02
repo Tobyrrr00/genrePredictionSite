@@ -3,16 +3,17 @@ import librosa
 import math
 import json
 import csv
+import numpy as np
 
 DATASET_PATH = "fma_small"  # directory where track files are located
-METADATA_PATH = "tracks.csv"  # CSV file with track metadata
+METADATA_PATH = "fma_metadata/tracks.csv"  # CSV file with track metadata
 JSON_PATH = "data.json"
 
 SAMPLE_RATE = 22050
 DURATION = 30  # measured in seconds
 SAMPLES_PER_TRACK = SAMPLE_RATE * DURATION
 
-def save_mfcc(dataset_path, metadata_path, json_path, n_mfcc = 13, n_fft = 512, hop_length = 512, num_segments = 5):
+def save_mfcc(dataset_path, metadata_path, json_path, n_mfcc=13, n_fft=2048, hop_length=512, num_segments=5):
 
     data = {
         "mapping": [],
@@ -21,16 +22,17 @@ def save_mfcc(dataset_path, metadata_path, json_path, n_mfcc = 13, n_fft = 512, 
     }
 
     num_samples_per_segment = int(SAMPLES_PER_TRACK / num_segments)
-    expected_num_mfcc_verctors_per_segment = math.ceil(num_samples_per_segment / hop_length)
+    expected_num_mfcc_vectors_per_segment = math.ceil(num_samples_per_segment / hop_length)
 
     genre_dict = {}  # for storing genre label mapping
 
-    with open(metadata_path, 'r') as f:
+    with open(metadata_path, 'r', encoding='utf-8') as f:
         reader = csv.reader(f)
         next(reader)  # skip header
         for row in reader:
             track_id, genre = row[0], row[1]  # assuming track_id is first column and genre is second
-            file_path = os.path.join(dataset_path, str(track_id) + '.mp3')
+            folder_name = track_id.zfill(6)[:3]
+            file_path = os.path.join(dataset_path, folder_name, track_id.zfill(6) + '.mp3')
 
             if os.path.exists(file_path):
                 if genre not in genre_dict:
@@ -49,7 +51,7 @@ def save_mfcc(dataset_path, metadata_path, json_path, n_mfcc = 13, n_fft = 512, 
                                                 hop_length=hop_length)
                     mfcc = mfcc.T
 
-                    if len(mfcc) == expected_num_mfcc_verctors_per_segment:
+                    if len(mfcc) == expected_num_mfcc_vectors_per_segment:
                         data["mfcc"].append(mfcc.tolist())
                         data["labels"].append(genre_dict[genre])
                         print("{}, segment:{}".format(file_path, s+1))
