@@ -72,7 +72,7 @@ if __name__ == "__main__":
         tf.keras.layers.Dropout(0.3),
 
         #4th hidden layer
-        tf.keras.layers.Dense(10, activation="softmax"),
+        tf.keras.layers.Dense(16, activation="softmax"),
     ])
 
     #compile the network
@@ -87,7 +87,7 @@ if __name__ == "__main__":
 
     history = model.fit(inputs_train, targets_train, 
              validation_data = (inputs_test, targets_test),
-             epochs = 150,
+             epochs = 25,
              batch_size = 32)
     
     #plot accuracy and error over the epochs
