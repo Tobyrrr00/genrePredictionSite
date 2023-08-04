@@ -3,7 +3,7 @@ import librosa
 import math
 import json
 
-INPUT_PATH = "Input"
+INPUT_PATH = "genrePredictionSite\Input"
 JSON_PATH = "dataInput.json"
 SAMPLE_RATE = 22050
 DURATION = 30  # total duration of each audio file, in seconds
@@ -20,8 +20,8 @@ def save_mfcc(input_path, json_path, n_mfcc=13, n_fft=2048, hop_length=512):
 
     for file in os.listdir(input_path):
         # ensure we're processing .wav files only
-        if not file.endswith('.wav'):
-            continue
+        # if not file.endswith('.wav'):
+        #     continue
 
         # load audio file
         file_path = os.path.join(input_path, file)
