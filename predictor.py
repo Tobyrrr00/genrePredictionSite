@@ -3,7 +3,7 @@ import numpy as np
 from tensorflow.keras.models import load_model
 
 # Load your trained model
-model = load_model("genreClassifier150")
+model = load_model("genrePredictionSite\genreClassifier150")
 
 # Load data from json file
 with open("dataInput.json", "r") as fp:
